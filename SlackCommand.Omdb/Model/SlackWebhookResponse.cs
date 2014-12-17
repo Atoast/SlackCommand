@@ -1,0 +1,112 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace SlackCommand.Omdb.Model
+{
+    public class SlackWebhookResponse
+    {
+        public SlackWebhookPayload payload { get; set; }
+
+        public SlackWebhookResponse FromOmdbTitle(OmdbTitle omdbTitle)
+        {
+            var imdbTitle = FormatImdbTitle(omdbTitle.Title, omdbTitle.imdbId, omdbTitle.Year);
+            var imdbText = FormatImdbText(omdbTitle.Plot, omdbTitle.imdbRating, omdbTitle.Poster, omdbTitle.Director);
+
+            var payload = new SlackWebhookPayload()
+            {
+                username = "Imdb",
+                text = omdbTitle.Poster
+            };
+
+            var attachment = new SlackWebhookResponseAttachment()
+            {
+                fallback = imdbTitle,
+                pretext = imdbTitle,
+                color = "#FACC2E"
+            };
+
+            var fields = new SlackWebhookResponseAttachmentFields()
+            {
+                title = omdbTitle.Title,
+                value = imdbText
+            };
+
+            var response = new SlackWebhookResponse();
+            
+            attachment.fields.Add(fields);
+            payload.attachments.Add(attachment);
+            response.payload = payload;
+
+            return response;
+        }
+
+        public string FormatImdbTitle(string title, string imdbId, string year)
+        {
+            var result = string.Format("<http://www.imdb.com/title/{0}|{1}> ({2})", imdbId, title, year);
+
+            return result;
+        }
+
+        public string FormatImdbText(string plot, string rating, string poster, string director)
+        {
+            var result = string.Format("{0}\n{1}\nRating: {2}\nDirector: {3}", poster, plot, rating, director);
+            return result;
+        }
+    }
+    public class SlackWebhookPayload
+    {
+        public string channel { get; set; }
+        public string username { get; set; }
+        public string text { get; set; }
+        public bool unfurl_links { get; set; }
+        public List<SlackWebhookResponseAttachment> attachments  { get; set; }
+
+        public SlackWebhookPayload()
+        {
+            this.attachments = new List<SlackWebhookResponseAttachment>();
+            this.unfurl_links = true;
+        }
+        //curl -X POST --data-urlencode 'payload={"channel": "#debug", "username": "webhookbot", "text": "This is posted to #debug and comes from a bot named webhookbot.", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
+    }
+
+    public class SlackWebhookResponseAttachment
+    {
+        public string fallback { get; set; }
+        public string pretext { get; set; }
+        public string color { get; set; }
+        public List<SlackWebhookResponseAttachmentFields> fields { get; set; }
+
+        public SlackWebhookResponseAttachment()
+        {
+            this.fields = new List<SlackWebhookResponseAttachmentFields>();
+        }
+
+    }
+
+    public class SlackWebhookResponseAttachmentFields
+    {
+        public string title { get; set; }
+        public string value { get; set; }
+    }
+}
+
+/*
+{
+   "attachments":[
+      {
+         "fallback":"New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
+         "pretext":"New open task [Urgent]: <http://url_to_task|Test out Slack message attachments>",
+         "color":"#D00000",
+         "fields":[
+            {
+               "title":"Notes",
+               "value":"This is much easier than I thought it would be.",
+               "short":false
+            }
+         ]
+      }
+   ]
+}		
+*/
