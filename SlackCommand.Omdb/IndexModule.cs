@@ -2,7 +2,7 @@
 {
     using Nancy;
     using Nancy.ModelBinding;
-    using RestSharp;
+    using Newtonsoft.Json;
 
     public class IndexModule : NancyModule
     {
@@ -37,15 +37,26 @@
             {
                 var slackCommand = new Model.SlackCommandRequest();
                 slackCommand = this.Bind<Model.SlackCommandRequest>();
-                
-                var result = omdb.SearchSingleResult(slackCommand.text);
-                var response = new Model.SlackWebhookResponse().FromOmdbTitle(result);
-                response.payload.channel = "#" + slackCommand.channel_name;
+
+                var searchTerm = slackCommand.text.Trim();
+                var isListSearch = searchTerm.StartsWith("?");
+                var response = new Model.SlackWebhookResponse();
+
+                if(isListSearch)
+                {
+
+                }
+                else
+                {
+                    var SingleSearchResultcmd = new Commands.SearchSingleResultCommand();
+                    response = SingleSearchResultcmd.Execute(searchTerm, slackCommand.channel_name, slackCommand.user_name);
+                }
 
                 var slackResponder = new Integration.SlackWebhookResponder();
                 slackResponder.Send(response);
 
-                return "";
+                var jsonResponse = JsonConvert.SerializeObject(response);
+                return jsonResponse;
             };
         }
     }

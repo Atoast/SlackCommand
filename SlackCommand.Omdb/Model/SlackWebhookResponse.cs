@@ -9,16 +9,19 @@ namespace SlackCommand.Omdb.Model
     {
         public SlackWebhookPayload payload { get; set; }
 
-        public SlackWebhookResponse FromOmdbTitle(OmdbTitle omdbTitle)
+        public SlackWebhookResponse()
+        {
+            this.payload = new SlackWebhookPayload();
+        }
+
+        public SlackWebhookResponse FromOmdbTitle(OmdbTitle omdbTitle, string webhookUsername="Imdb")
         {
             var imdbTitle = FormatImdbTitle(omdbTitle.Title, omdbTitle.imdbId, omdbTitle.Year);
             var imdbText = FormatImdbText(omdbTitle.Plot, omdbTitle.imdbRating, omdbTitle.Poster, omdbTitle.Director);
 
-            var payload = new SlackWebhookPayload()
-            {
-                username = "Imdb",
-                text = omdbTitle.Poster
-            };
+            var response = new SlackWebhookResponse();
+            response.payload.username = webhookUsername;
+            response.payload.text = omdbTitle.Poster;
 
             var attachment = new SlackWebhookResponseAttachment()
             {
@@ -33,8 +36,6 @@ namespace SlackCommand.Omdb.Model
                 value = imdbText
             };
 
-            var response = new SlackWebhookResponse();
-            
             attachment.fields.Add(fields);
             payload.attachments.Add(attachment);
             response.payload = payload;
@@ -53,6 +54,22 @@ namespace SlackCommand.Omdb.Model
         {
             var result = string.Format("{0}\n{1}\nRating: {2}\nDirector: {3}", poster, plot, rating, director);
             return result;
+        }
+
+        public SlackWebhookResponse FromOmdbSearchResult(OmdbSearchResultList searchResult)
+        {
+            var result = new SlackWebhookResponse(); ;
+            return result;
+        }
+
+        public SlackWebhookResponse EmptyResultResponse(string searchTerm , string channel, string userName, string webhookUsername = "Imdb")
+        {
+            var response = new SlackWebhookResponse();
+            response.payload.username = webhookUsername;
+            response.payload.text = string.Format("Psssst {0} I couldn't find a title named \"{1}\".", userName, searchTerm);
+            response.payload.channel = string.Format("#{0}", channel);
+
+            return response;
         }
     }
     public class SlackWebhookPayload

@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Commands\SearchSingleResultCommand.cs" />
     <Compile Include="IndexModule.cs" />
     <Compile Include="Integration\SlackWebhookResponder.cs" />
     <Compile Include="Model\OmdbSearchResult.cs" />
@@ -89,6 +90,8 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Views\index.cshtml" />
+    <None Include="Properties\PublishProfiles\slacksonpollock - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\slacksonpollock - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\slacksonpollock.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
