@@ -66,7 +66,7 @@ namespace SlackCommand.Omdb.Model
         {
             var response = new SlackWebhookResponse();
             response.payload.username = webhookUsername;
-            response.payload.text = string.Format("Psssst {0} I couldn't find a title named \"{1}\".", userName, searchTerm);
+            response.payload.text = string.Format("Psssst @{0} I couldn't find a title named \"{1}\".", userName, searchTerm);
             response.payload.channel = string.Format("#{0}", channel);
 
             return response;

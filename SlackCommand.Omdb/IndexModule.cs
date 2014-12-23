@@ -21,18 +21,6 @@
         {
             var omdb = new Omdb.Integration.OmdbQuery();
 
-            Post["/imdb/debug"] = parameters =>
-            {
-                var slackCommand = new Model.SlackCommandRequest();
-                slackCommand = this.Bind<Model.SlackCommandRequest>();
-
-                var result = omdb.SearchSingleResult(slackCommand.text);
-
-                var response = new Model.SlackCommandResponse().FromOmdbTitle(result);
-
-                return response;
-            };
-
             Post["/imdb"] = parameters =>
             {
                 var slackCommand = new Model.SlackCommandRequest();
@@ -44,12 +32,12 @@
 
                 if(isListSearch)
                 {
-
+                    
                 }
                 else
                 {
-                    var SingleSearchResultcmd = new Commands.SearchSingleResultCommand();
-                    response = SingleSearchResultcmd.Execute(searchTerm, slackCommand.channel_name, slackCommand.user_name);
+                    var singleSearchResultCmd = new Commands.SearchSingleResultCommand();
+                    response = singleSearchResultCmd.Execute(searchTerm, slackCommand.channel_name, slackCommand.user_name);
                 }
 
                 var slackResponder = new Integration.SlackWebhookResponder();

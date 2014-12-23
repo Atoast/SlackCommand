@@ -77,8 +77,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Commands\SearchResultCommand.cs" />
     <Compile Include="Commands\SearchSingleResultCommand.cs" />
     <Compile Include="IndexModule.cs" />
+    <Compile Include="Model\OmdbCommand.cs" />
     <Compile Include="Integration\SlackWebhookResponder.cs" />
     <Compile Include="Model\OmdbSearchResult.cs" />
     <Compile Include="Model\SearchResult.cs" />

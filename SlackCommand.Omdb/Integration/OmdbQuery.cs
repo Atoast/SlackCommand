@@ -10,10 +10,10 @@ namespace SlackCommand.Omdb.Integration
 {
     public class OmdbQuery
     {
+        private const string OMDB_URL = "http://www.omdbapi.com/";
         public OmdbSearchResultList Search(string searchTerm)
         {
-            var url = "http://www.omdbapi.com/";
-            var client = new RestClient(url);
+            var client = new RestClient(OMDB_URL);
             var result = new OmdbSearchResultList();
 
             var request = GetSearchRequest(searchTerm);
@@ -30,8 +30,7 @@ namespace SlackCommand.Omdb.Integration
 
         public OmdbTitle SearchSingleResult(string title)
         {
-            var url = "http://www.omdbapi.com/";
-            var client = new RestClient(url);
+            var client = new RestClient(OMDB_URL);
             var result = new OmdbTitle();
 
             var request = GetTitleRequest(title);
@@ -45,7 +44,6 @@ namespace SlackCommand.Omdb.Integration
 
             return result;
         }
-
 
         public IRestRequest GetSearchRequest(string searchTerm)
         {
@@ -62,6 +60,11 @@ namespace SlackCommand.Omdb.Integration
                                 .AddQueryParameter(plotParam, plot)
                                 .AddQueryParameter(formatParam, format);
             return request;
+        }
+
+        public OmdbCommand ParseCommand(string text)
+        {
+            throw new NotImplementedException();
         }
 
         public IRestRequest GetTitleRequest(string title)

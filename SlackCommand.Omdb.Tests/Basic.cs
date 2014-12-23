@@ -47,5 +47,14 @@ namespace SlackCommand.Omdb.Tests
             Assert.IsFalse(foundTitle);
         }
 
+
+        [TestMethod]
+        public void OmdbCommandParserSearch()
+        {
+            var commandText = "";
+            var omdb = new OmdbQuery();
+
+            var result = omdb.ParseCommand(commandText);
+        }
     }
 }
