@@ -21,7 +21,7 @@ namespace SlackCommand.Omdb.Model
 
             var response = new SlackWebhookResponse();
             response.payload.username = webhookUsername;
-            response.payload.text = omdbTitle.Poster;
+            response.payload.text = FormatImdbPosterUrl(omdbTitle.imdbId);
 
             var attachment = new SlackWebhookResponseAttachment()
             {
@@ -41,6 +41,14 @@ namespace SlackCommand.Omdb.Model
             response.payload = payload;
 
             return response;
+        }
+
+        public string FormatImdbPosterUrl(string imdbId)
+        {
+            //
+            var result = string.Format("http://img.omdbapi.com/?apikey=cce8fe13&i={0}", imdbId);
+
+            return result;
         }
 
         public string FormatImdbTitle(string title, string imdbId, string year)
