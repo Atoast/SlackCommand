@@ -23,7 +23,10 @@
                 }
 
                 var isTvSearch = command.ToLower().StartsWith("?tv");
-                if()
+                if(isTvSearch)
+                {
+                    this.Type = OmdbType.Tv;
+                }
             }
 
 
