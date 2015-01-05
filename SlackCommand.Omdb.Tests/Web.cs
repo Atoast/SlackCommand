@@ -86,7 +86,7 @@ namespace SlackCommand.Omdb.Tests
                 user_id = "U02NAKD4K",
                 user_name = "casperandersen",
                 command = "/imdb",
-                text = "test"
+                text = "the 100"
             };
 
             // When

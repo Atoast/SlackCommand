@@ -68,17 +68,33 @@ namespace SlackCommand.Omdb.Tests
 
         [TestMethod]
         [TestCategory("WebhookResponses")]
-        public void WebhookResponseWithResult()
+        public void WebhookResponseWithResultAttachments()
         {
             var searchTerm = "The 100";
-            var channel = "WebhookTestChannel";
             var userName = "Casper";
             var responseText = string.Format("Psssst @{0} I couldn't find a title named \"{1}\".", userName, searchTerm);
             var omdbSearch = new OmdbQuery();
             var searchResult = omdbSearch.SearchSingleResult(searchTerm);
             var imdbId = searchResult.imdbId;
-            var response = new Model.SlackWebhookResponse().FromOmdbTitle(searchResult);
+            var response = new Model.SlackWebhookResponse().FromOmdbTitleAsAttachment(searchResult);
             var hasImdbId = response.payload.attachments[0].pretext.Contains(imdbId);
+            Assert.IsTrue(hasImdbId);
+        }
+
+        [TestMethod]
+        [TestCategory("WebhookResponses")]
+        public void WebhookResponseWithResult()
+        {       
+            var searchTerm = "The 100";
+            var userName = "Casper";
+            var responseText = string.Format("Psssst @{0} I couldn't find a title named \"{1}\".", userName, searchTerm);
+            var omdbSearch = new OmdbQuery();
+
+            var searchResult = omdbSearch.SearchSingleResult(searchTerm);
+            var imdbId = searchResult.imdbId;
+            var response = new Model.SlackWebhookResponse().FromOmdbTitle(searchResult);
+
+            var hasImdbId = response.payload.text.Contains(imdbId);
             Assert.IsTrue(hasImdbId);
         }
     }

@@ -14,7 +14,7 @@ namespace SlackCommand.Omdb.Model
             this.payload = new SlackWebhookPayload();
         }
 
-        public SlackWebhookResponse FromOmdbTitle(OmdbTitle omdbTitle, string webhookUsername="Imdb")
+        public SlackWebhookResponse FromOmdbTitleAsAttachment(OmdbTitle omdbTitle, string webhookUsername="Imdb")
         {
             var imdbTitle = FormatImdbTitle(omdbTitle.Title, omdbTitle.imdbId, omdbTitle.Year);
             var imdbText = FormatImdbText(omdbTitle.Plot, omdbTitle.imdbRating, omdbTitle.Poster, omdbTitle.Director);
@@ -45,7 +45,8 @@ namespace SlackCommand.Omdb.Model
 
         public string FormatImdbTitle(string title, string imdbId, string year)
         {
-            var result = string.Format("<http://www.imdb.com/title/{0}|{1}> ({2})", imdbId, title, year);
+            var posterUrl = FormatImdbPoster(imdbId);
+            var result = string.Format("<{0}|{1}> ({2})", posterUrl, title, year);
 
             return result;
         }
@@ -75,6 +76,20 @@ namespace SlackCommand.Omdb.Model
             response.payload.username = webhookUsername;
             response.payload.text = string.Format("Psssst @{0} I couldn't find a title named \"{1}\".", userName, searchTerm);
             response.payload.channel = string.Format("#{0}", channel);
+
+            return response;
+        }
+
+        public SlackWebhookResponse FromOmdbTitle(OmdbTitle omdbTitle, string webhookUsername = "Imdb")
+        {
+            var imdbTitle = FormatImdbTitle(omdbTitle.Title, omdbTitle.imdbId, omdbTitle.Year);
+            var imdbText = FormatImdbText(omdbTitle.Plot, omdbTitle.imdbRating, omdbTitle.Poster, omdbTitle.Director);
+            var posterUrl = FormatImdbPoster(omdbTitle.imdbId);
+
+            var response = new SlackWebhookResponse();
+
+            response.payload.username = webhookUsername;
+            response.payload.text = string.Format("{0}\n{1}\n{2}", imdbTitle, imdbText, posterUrl);
 
             return response;
         }
