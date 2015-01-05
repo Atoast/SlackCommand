@@ -20,8 +20,6 @@ namespace SlackCommand.Omdb.Model
             var imdbText = FormatImdbText(omdbTitle.Plot, omdbTitle.imdbRating, omdbTitle.Poster, omdbTitle.Director);
 
             var response = new SlackWebhookResponse();
-            response.payload.username = webhookUsername;
-            response.payload.text = FormatImdbPosterUrl(omdbTitle.imdbId);
 
             var attachment = new SlackWebhookResponseAttachment()
             {
@@ -39,16 +37,10 @@ namespace SlackCommand.Omdb.Model
             attachment.fields.Add(fields);
             payload.attachments.Add(attachment);
             response.payload = payload;
+            response.payload.username = webhookUsername;
+            response.payload.text = "<" + FormatImdbPoster(omdbTitle.imdbId) + ">";
 
             return response;
-        }
-
-        public string FormatImdbPosterUrl(string imdbId)
-        {
-            //
-            var result = string.Format("http://img.omdbapi.com/?apikey=cce8fe13&i={0}", imdbId);
-
-            return result;
         }
 
         public string FormatImdbTitle(string title, string imdbId, string year)
@@ -61,6 +53,13 @@ namespace SlackCommand.Omdb.Model
         public string FormatImdbText(string plot, string rating, string poster, string director)
         {
             var result = string.Format("{0}\n{1}\nRating: {2}\nDirector: {3}", poster, plot, rating, director);
+            return result;
+        }
+
+        public string FormatImdbPoster(string imdbId)
+        {
+            var apiKey = "cce8fe13";
+            var result = string.Format("http://img.omdbapi.com/?apikey={0}&i={1}",apiKey, imdbId);
             return result;
         }
 
@@ -86,12 +85,14 @@ namespace SlackCommand.Omdb.Model
         public string username { get; set; }
         public string text { get; set; }
         public bool unfurl_links { get; set; }
+        public bool unfurl_media { get; set; }
         public List<SlackWebhookResponseAttachment> attachments  { get; set; }
 
         public SlackWebhookPayload()
         {
             this.attachments = new List<SlackWebhookResponseAttachment>();
             this.unfurl_links = true;
+            this.unfurl_media = true;
         }
         //curl -X POST --data-urlencode 'payload={"channel": "#debug", "username": "webhookbot", "text": "This is posted to #debug and comes from a bot named webhookbot.", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
     }

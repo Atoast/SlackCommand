@@ -9,6 +9,7 @@ namespace SlackCommand.Omdb.Tests
     public class Web
     {
         [TestMethod]
+        [TestCategory("NancyRoutingResponses")]
         public void DebugRoute()
         {
             var bootstrapper = new DefaultNancyBootstrapper();
@@ -41,6 +42,7 @@ namespace SlackCommand.Omdb.Tests
 
 
         [TestMethod]
+        [TestCategory("NancyRoutingResponses")]
         public void WebhookResponse()
         {
             var bootstrapper = new DefaultNancyBootstrapper();
@@ -69,6 +71,7 @@ namespace SlackCommand.Omdb.Tests
         }
 
         [TestMethod]
+        [TestCategory("NancyRoutingResponses")]
         public void WebhookSearchResultResponse()
         {
             var bootstrapper = new DefaultNancyBootstrapper();
@@ -97,6 +100,7 @@ namespace SlackCommand.Omdb.Tests
         }
 
         [TestMethod]
+        [TestCategory("NancyRoutingResponses")]
         public void WebhookNoSearchResultResponse()
         {
             var bootstrapper = new DefaultNancyBootstrapper();

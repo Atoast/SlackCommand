@@ -8,6 +8,7 @@ namespace SlackCommand.Omdb.Tests
     public class Basic
     {
         [TestMethod]
+        [TestCategory("SearchResults")]
         public void SearchWithResult()
         {
             var searchTerm = "Warehouse";
@@ -18,6 +19,7 @@ namespace SlackCommand.Omdb.Tests
         }
 
         [TestMethod]
+        [TestCategory("SearchResults")]
         public void SearchWithNoResult()
         {
             var searchTerm = "ZZZZZXXXXXXXYYYYY";
@@ -28,6 +30,7 @@ namespace SlackCommand.Omdb.Tests
         }
 
         [TestMethod]
+        [TestCategory("SearchResults")]
         public void TitleSearchWithResult()
         {
             var title = "Warehouse 13";
@@ -38,6 +41,7 @@ namespace SlackCommand.Omdb.Tests
         }
 
         [TestMethod]
+        [TestCategory("SearchResults")]
         public void TitleSearchWithNoResult()
         {
             var title = "Warehouse 13121212121212";
@@ -49,12 +53,33 @@ namespace SlackCommand.Omdb.Tests
 
 
         [TestMethod]
-        public void OmdbCommandParserSearch()
+        [TestCategory("WebhookResponses")]
+        public void WebhookResponseNoResults()
         {
-            var commandText = "";
-            var omdb = new OmdbQuery();
+            var searchTerm = "WebhookResponse No Result";
+            var channel = "WebhookTestChannel";
+            var userName = "Casper";
+            var responseText = string.Format("Psssst @{0} I couldn't find a title named \"{1}\".", userName, searchTerm);
 
-            var result = omdb.ParseCommand(commandText);
+            var response = new Model.SlackWebhookResponse().EmptyResultResponse(searchTerm, channel, userName);
+            var hasCorrectResponse = response.payload.text == responseText;
+            Assert.IsTrue(hasCorrectResponse);
+        }
+
+        [TestMethod]
+        [TestCategory("WebhookResponses")]
+        public void WebhookResponseWithResult()
+        {
+            var searchTerm = "The 100";
+            var channel = "WebhookTestChannel";
+            var userName = "Casper";
+            var responseText = string.Format("Psssst @{0} I couldn't find a title named \"{1}\".", userName, searchTerm);
+            var omdbSearch = new OmdbQuery();
+            var searchResult = omdbSearch.SearchSingleResult(searchTerm);
+            var imdbId = searchResult.imdbId;
+            var response = new Model.SlackWebhookResponse().FromOmdbTitle(searchResult);
+            var hasImdbId = response.payload.attachments[0].pretext.Contains(imdbId);
+            Assert.IsTrue(hasImdbId);
         }
     }
 }
