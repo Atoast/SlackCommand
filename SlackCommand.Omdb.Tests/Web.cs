@@ -129,5 +129,25 @@ namespace SlackCommand.Omdb.Tests
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
         }
 
+        [TestMethod]
+        [TestCategory("NancyRoutingResponses")]
+        public void PosterRouteFoundResponse()
+        {
+            var bootstrapper = new DefaultNancyBootstrapper();
+            var browser = new Browser(bootstrapper);
+
+            var imdbId = "tt2562232";
+            var posterUrl = string.Format("/imdb/{0}.jpg", imdbId);
+
+            // When
+            var result = browser.Get(posterUrl, with => {
+                with.HttpRequest();
+            });
+
+            // Then
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.AreEqual(result.ContentType, "image/jpeg");
+        }
+
     }
 }

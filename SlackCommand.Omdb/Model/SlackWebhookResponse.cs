@@ -46,14 +46,14 @@ namespace SlackCommand.Omdb.Model
         public string FormatImdbTitle(string title, string imdbId, string year)
         {
             var posterUrl = FormatImdbPoster(imdbId);
-            var result = string.Format("<{0}|{1}> ({2})", posterUrl, title, year);
-
+            //var result = string.Format("<{3}>\n<http://www.imdb.com/title/{0}|{1}> ({2})", imdbId, title, year, posterUrl);
+            var result = string.Format("<{3}>\n{1} ({2})", imdbId, title, year, posterUrl);
             return result;
         }
 
         public string FormatImdbText(string plot, string rating, string poster, string director)
         {
-            var result = string.Format("{0}\n{1}\nRating: {2}\nDirector: {3}", poster, plot, rating, director);
+            var result = string.Format("{0}\nRating: {1}\nDirector: {2}", plot, rating, director);
             return result;
         }
 
@@ -107,7 +107,7 @@ namespace SlackCommand.Omdb.Model
         {
             this.attachments = new List<SlackWebhookResponseAttachment>();
             this.unfurl_links = true;
-            this.unfurl_media = true;
+            this.unfurl_media = false;
         }
         //curl -X POST --data-urlencode 'payload={"channel": "#debug", "username": "webhookbot", "text": "This is posted to #debug and comes from a bot named webhookbot.", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
     }

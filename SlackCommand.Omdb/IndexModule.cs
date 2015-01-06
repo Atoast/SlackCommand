@@ -3,6 +3,7 @@
     using Nancy;
     using Nancy.ModelBinding;
     using Newtonsoft.Json;
+    using System.IO;
 
     public class IndexModule : NancyModule
     {
@@ -46,6 +47,24 @@
                 var jsonResponse = JsonConvert.SerializeObject(response);
                 return jsonResponse;
             };
+
+            Get["/imdb/{imdbid}.jpg"] = parameters =>
+            {
+                var client = new RestSharp.RestClient("http://img.omdbapi.com");
+                var request = new RestSharp.RestRequest(RestSharp.Method.GET).AddQueryParameter("apikey", "cce8fe13").AddQueryParameter("i", parameters["imdbid"]);
+                var responseData = client.DownloadData(request);
+                var r = new Response();
+                r.Contents = s => {
+                    using (var writer = new BinaryWriter(s))
+                    {
+                        writer.Write(responseData);
+                    };
+                };
+                r.ContentType = "image/jpeg";
+
+                return r;
+            };
         }
+
     }
 }
